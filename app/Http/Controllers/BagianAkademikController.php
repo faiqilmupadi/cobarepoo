@@ -19,29 +19,19 @@ class BagianAkademikController extends Controller
     {
         // Validasi input
         $validatedData = $request->validate([
-            'kode' => 'required|string|max:25',
+            'kode' => 'required|string|max:25|unique:ruangperkuliahan,kode_ruang',
             'gedung' => 'required|string|max:50',
             'kapasitas' => 'required|integer',
         ]);
+        // Simpan data ke tabel ruangperkuliahan
+        RuangPerkuliahan::create([
+            'kode_ruang' => $validatedData['kode'],
+            'gedung' => $validatedData['gedung'],
+            'kapasitas' => $validatedData['kapasitas'],
+        ]);
 
-        try {
-            // Simpan data ke tabel ruangperkuliahan
-            RuangPerkuliahan::create([
-                'kode_ruang' => $validatedData['kode'],
-                'gedung' => $validatedData['gedung'],
-                'kapasitas' => $validatedData['kapasitas'],
-            ]);
-
-            // Redirect setelah sukses
-            return redirect()->route('penyusunanruang.create')->with('success', 'Data berhasil disimpan!');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Cek apakah error disebabkan oleh pelanggaran unique constraint
-            if ($e->errorInfo[1] == 1062) { // 1062 adalah kode error untuk pelanggaran unique constraint
-                return redirect()->back()->with('error', 'Kode Ruang sudah pernah ditambahkan.');
-            }
-            // Tangkap error lainnya
-            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan. Silakan coba lagi.']);
-        }
+        // Redirect setelah sukses
+        return redirect()->route('penyusunanruang.create')->with('success', 'Data berhasil disimpan!');
     }
 
 

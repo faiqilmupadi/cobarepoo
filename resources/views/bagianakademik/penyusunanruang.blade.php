@@ -121,19 +121,24 @@
 
         <h5>Pengisian Data Alokasi Ruangan: </h5>
         <br>
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="pt-3">
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $item)
+                            <li>{{ $item }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         @endif
 
@@ -144,17 +149,17 @@
                 <div class="form-group">
                     <label for="kode">Kode Ruang</label>
                     <input type="text" class="form-control" id="kode" name="kode"
-                        placeholder="Masukkan Kode Ruang" required>
+                        placeholder="Masukkan Kode Ruang">
                 </div>
                 <div class="form-group">
                     <label for="gedung">Gedung</label>
                     <input type="text" class="form-control" id="gedung" name="gedung"
-                        placeholder="Masukkan Nama Gedung" required>
+                        placeholder="Masukkan Nama Gedung">
                 </div>
                 <div class="form-group">
                     <label for="kapasitas">Kapasitas</label>
                     <input type="number" class="form-control" id="kapasitas" name="kapasitas"
-                        placeholder="Masukkan Kapasitas" required>
+                        placeholder="Masukkan Kapasitas">
                 </div>
 
                 <!-- Menggunakan div container untuk tombol -->
