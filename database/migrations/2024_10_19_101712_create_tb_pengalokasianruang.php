@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('pengalokasianruang', function (Blueprint $table) {
             $table->id();
             $table->string('kode_ruang', 25);
-            $table->unsignedBigInteger('id_programstudi'); 
+            $table->unsignedBigInteger('id_programstudi');
+            $table->string('status')->default('menunggu konfirmasi');
             $table->foreign('id_programstudi')->references('id_programstudi')->on('program_studi')->onDelete('cascade');
             $table->foreign('kode_ruang')->references('kode_ruang')->on('ruangperkuliahan')->onDelete('cascade');
             $table->timestamps();

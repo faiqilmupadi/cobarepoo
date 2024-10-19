@@ -80,21 +80,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                <tbody>
                     @foreach ($pengajuans_ruang as $pengajuanruang)
                         <tr>
                             <td>{{ $pengajuanruang->kode_ruang }}</td>
-                            <td>{{ $pengajuanruang->id_programstudi }}</td>
+                            <td>{{ $pengajuanruang->programStudi->nama_programstudi }}</td>
                             <td>
-                                @if (session('approved_pengajuansruang') && array_key_exists($pengajuanruang->id, session('approved_pengajuansruang')))
+                                @if ($pengajuanruang->status === 'disetujui')
                                     <span class="text-success">Disetujui</span>
-                                @elseif (session('rejected_pengajuansruang') && array_key_exists($pengajuanruang->id, session('rejected_pengajuansruang')))
+                                @elseif ($pengajuanruang->status === 'ditolak')
                                     <span class="text-danger">Ditolak</span>
                                 @else
                                     <form action="{{ route('pengajuan.updateruang', $pengajuanruang->id) }}"
                                         method="POST" class="d-inline">
                                         @csrf
                                         <input type="hidden" name="_method" value="PATCH">
-                                        <!-- Menyatakan metode PATCH -->
                                         <input type="hidden" name="action" value="setuju">
                                         <button type="submit" class="btn btn-success btn-sm">Setuju</button>
                                     </form>
@@ -102,7 +102,6 @@
                                         method="POST" class="d-inline">
                                         @csrf
                                         <input type="hidden" name="_method" value="PATCH">
-                                        <!-- Menyatakan metode PATCH -->
                                         <input type="hidden" name="action" value="tolak">
                                         <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
                                     </form>
@@ -111,19 +110,11 @@
                         </tr>
                     @endforeach
 
-                    <!-- Menampilkan pengajuan yang disetujui -->
-                    @foreach (session('approved_pengajuansruang', []) as $approvedPengajuansruang)
-                        <tr>
-                            <td>{{ $approvedPengajuansruang['kode_ruang'] }}</td>
-                            <td>{{ $approvedPengajuansruang['id_programstudi'] }}</td>
-                            <td><span class="text-success">Disetujui</span></td>
-                        </tr>
-                    @endforeach
-                    <!-- Menampilkan pengajuan yang ditolak -->
+                    <!-- Menampilkan pengajuan yang ditolak dari session -->
                     @foreach (session('rejected_pengajuansruang', []) as $rejectedPengajuanruang)
                         <tr>
                             <td>{{ $rejectedPengajuanruang['kode_ruang'] }}</td>
-                            <td>{{ $rejectedPengajuanruang['id_programstudi'] }}</td>
+                            <td>{{ $rejectedPengajuanruang['nama_programstudi'] }}</td>
                             <td><span class="text-danger">Ditolak</span></td>
                         </tr>
                     @endforeach

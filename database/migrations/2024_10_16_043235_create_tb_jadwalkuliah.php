@@ -16,6 +16,7 @@ return new class extends Migration
             $table->time('jam'); // Jam perkuliahan
             $table->string('nama_kelas', 10); // Foreign key untuk nama kelas
             $table->string('nidn_dosenpengampu', 18);
+            $table->string('status')->default('menunggu konfirmasi');
             $table->timestamps(); // Untuk mencatat waktu pembuatan dan update
 
             $table->foreign('nidn_dosenpengampu')->references('nidn_dosenpengampu')->on('matakuliah')->onDelete('cascade');

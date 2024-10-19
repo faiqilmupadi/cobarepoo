@@ -54,10 +54,18 @@ Route::post('pemilihanrole', [UserController::class, 'handleRoleSelection'])->na
 // bagian akademik penyusunan ruang
 Route::get('bagianakademik/penyusunanruang', [BagianAkademikController::class, 'createPenyusunanRuang'])->name('penyusunanruang.create');
 Route::post('penyusunanruang', [BagianAkademikController::class, 'storePenyusunanRuang'])->name('penyusunanruang.store');
+// Route::get('lihatpenyusunanruang', function () {
+//     return view('bagianakademik.lihatpenyusunanruang', ['title' => 'lihatpenyusunanruang']);
+// })->name('lihatpenyusunanruang');
+Route::get('penyusunanruang/lihat', [BagianAkademikController::class, 'indexPenyusunanRuang'])->name('penyusunanruang.lihat');
+Route::get('penyusunanruang/{kode_ruang}/edit', [BagianAkademikController::class, 'edit'])->name('penyusunanruang.edit');
+Route::put('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'update'])->name('penyusunanruang.update');
+Route::delete('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'destroy'])->name('penyusunanruang.destroy');
 
 // bagian akademik pengalokasian ruang
 Route::get('bagianakademik/pengalokasianruang', [BagianAkademikController::class, 'createPengalokasianRuang'])->name('pengalokasianruang.create');
 Route::post('pengalokasianruang', [BagianAkademikController::class, 'storePengalokasianRuang'])->name('pengalokasianruang.store');
+Route::get('bagianakademik/pengalokasianruang/lihat', [BagianAkademikController::class, 'indexPengalokasianRuang'])->name('pengalokasianruang.lihat');
 
 // dekan menyetujui ruangan
 Route::get('/dekan/approve-ruang', [DekanController::class, 'createPengajuanRuang'])->name('dekan.approveruang');

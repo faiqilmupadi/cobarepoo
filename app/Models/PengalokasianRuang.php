@@ -18,6 +18,7 @@ class PengalokasianRuang extends Model
     protected $fillable = [
         'kode_ruang',
         'id_programstudi',
+        'status',
     ];
 
     public function ruangperkuliahan()

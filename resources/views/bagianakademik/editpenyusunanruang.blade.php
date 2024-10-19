@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengalokasian Ruang Perkuliahan</title>
+    <title>Penyusunan Ruang Perkuliahan</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -90,7 +90,6 @@
             border-radius: 8px;
         }
 
-
         .btn-container {
             display: flex;
             justify-content: space-between;
@@ -106,7 +105,6 @@
 </head>
 
 <body>
-
     <div class="header">
         <img src="sate_logo.png" alt="SATE Logo">
         <div>
@@ -115,75 +113,40 @@
         </div>
     </div>
 
-
     <div class="container">
         <br>
-        <h4>Penyusunan Alokasi Ruang Perkuliahan</h4>
-
-        <h5>Pengisian Data Alokasi Ruangan: </h5>
-        <br>
-        @if (session('successAjukan'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('successAjukan') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
-
-        @if ($errors->any())
-            <div class="pt-3">
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $item)
-                            <li>{{ $item }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
+        <h4>Edit Ruang Perkuliahan</h4>
 
         <div class="form">
-            <form action="{{ route('pengalokasianruang.store') }}" method="POST">
+            <form action="{{ route('penyusunanruang.update', $ruangPerkuliahan->kode_ruang) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="form-group">
                     <label for="kode_ruang">Kode Ruang</label>
-                    <select name="kode_ruang" class="form-control" id="kode_ruang">
-                        <option value="">Pilih Kode Ruang</option>
-                        @foreach ($ruangPerkuliahan as $ruang)
-                            <option value="{{ $ruang->kode_ruang }}"
-                                {{ old('kode_ruang', Session::get('kode_ruang')) == $ruang->kode_ruang ? 'selected' : '' }}>{{ $ruang->kode_ruang }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="col-sm-10">
+                        {{$ruangPerkuliahan->kode_ruang}}
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="id_programstudi">Program Studi</label>
-                    <select name="id_programstudi" class="form-control" id="id_programstudi">
-                        <option value="">Pilih Program Studi</option>
-                        @foreach ($programStudi as $prodi)
-                            <option value="{{ $prodi->id_programstudi }}"
-                                {{ old('id_programstudi', Session::get('id_programstudi')) == $prodi->id_programstudi ? 'selected' : '' }}>
-                                {{ $prodi->nama_programstudi }}</option>
-                        @endforeach
-                    </select>
+                    <label for="gedung">Gedung</label>
+                    <input type="text" class="form-control" value="{{$ruangPerkuliahan->gedung}}"
+                        id="gedung" name="gedung" placeholder="Masukkan Nama Gedung">
+                </div>
+                <div class="form-group">
+                    <label for="kapasitas">Kapasitas</label>
+                    <input type="number" class="form-control" value="{{$ruangPerkuliahan->kapasitas }}"
+                        id="kapasitas" name="kapasitas" placeholder="Masukkan Kapasitas">
                 </div>
 
-                <!-- Menggunakan div container untuk tombol -->
                 <div class="btn-container">
-                    <!-- Tombol back di sebelah kiri -->
                     <button type="button" class="btn btn-outline-secondary"
-                        onclick="window.location.href='{{ route('bagianakademik') }}'">←</button>
-
-                    <!-- Tombol simpan dan lihat di sebelah kanan -->
+                        onclick="window.location.href='{{ route('penyusunanruang.lihat') }}'">←</button>
                     <div class="btn-right">
-                        <button type="submit" class="btn btn-custom">AJUKAN</button>
-                        <button type="button" class="btn btn-custom-secondary" onclick="window.location.href='{{ route('pengalokasianruang.lihat') }}'">LIHAT</button>
-
+                        <button type="submit" class="btn btn-custom">Update</button>
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
 
