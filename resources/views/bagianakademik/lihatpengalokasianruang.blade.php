@@ -133,7 +133,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tbody>
+
                     @foreach ($alokasiRuang as $index => $alokasi)
                         <tr>
                             <td>{{ $index + 1 }}</td>
@@ -150,8 +150,18 @@
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-
+                    <!-- Tampilkan pengajuan yang ditolak dari session -->
+                    {{-- @if (count($rejectedPengajuansruang) > 0)
+                        @foreach ($rejectedPengajuansruang as $rejectedPengajuan)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $rejectedPengajuan['kode_ruang'] }}</td>
+                                <td>{{ $rejectedPengajuan['nama_programstudi'] ?? 'Program studi tidak ditemukan' }}
+                                </td>
+                                <td><span class="text-danger">Ditolak</span></td>
+                            </tr>
+                        @endforeach
+                    @endif --}}
                 </tbody>
             </table>
         </div>

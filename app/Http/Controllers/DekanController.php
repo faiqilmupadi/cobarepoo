@@ -38,14 +38,9 @@ class DekanController extends Controller
 
             return redirect()->route('dekan.approveruang')->with('message', 'Pengajuan dengan kode ruang ' . $pengajuanruang->kode_ruang . ' telah disetujui.');
         } elseif ($request->input('action') === 'tolak') {
-            // Simpan data yang akan dihapus ke dalam session sebelum dihapus dari database
-            $rejectedPengajuansruang = session('rejected_pengajuansruang', []);
-            $rejectedPengajuansruang[$id] = [
-                'kode_ruang' => $pengajuanruang->kode_ruang,
-                'nama_programstudi' => $pengajuanruang->programStudi->nama_programstudi,
-                'status' => 'ditolak'
-            ];
-            session(['rejected_pengajuansruang' => $rejectedPengajuansruang]);
+            // Update status menjadi 'ditolak'
+            $pengajuanruang->status = 'ditolak';
+            $pengajuanruang->save();
 
             // Hapus pengajuan dari database
             $pengajuanruang->delete();

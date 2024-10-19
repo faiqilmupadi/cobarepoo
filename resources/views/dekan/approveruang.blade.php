@@ -80,11 +80,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tbody>
                     @foreach ($pengajuans_ruang as $pengajuanruang)
                         <tr>
                             <td>{{ $pengajuanruang->kode_ruang }}</td>
-                            <td>{{ $pengajuanruang->programStudi->nama_programstudi }}</td>
+                            <td>{{ $pengajuanruang->programStudi->nama_programstudi ?? 'Program studi tidak ditemukan' }}
+                            </td>
                             <td>
                                 @if ($pengajuanruang->status === 'disetujui')
                                     <span class="text-success">Disetujui</span>
@@ -111,15 +111,21 @@
                     @endforeach
 
                     <!-- Menampilkan pengajuan yang ditolak dari session -->
-                    @foreach (session('rejected_pengajuansruang', []) as $rejectedPengajuanruang)
+                    {{-- @foreach (session('rejected_pengajuansruang', []) as $rejectedPengajuanruang)
                         <tr>
                             <td>{{ $rejectedPengajuanruang['kode_ruang'] }}</td>
-                            <td>{{ $rejectedPengajuanruang['nama_programstudi'] }}</td>
+                            <td>{{ $rejectedPengajuanruang['nama_programstudi'] ?? 'Program studi tidak ditemukan' }}
+                            </td>
                             <td><span class="text-danger">Ditolak</span></td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
+
             </table>
+            <div class="btn-container">
+                <button type="button" class="btn btn-outline-secondary"
+                    onclick="window.location.href='{{ route('dekan') }}'">←</button>
+            </div>
         </div>
 
         <!-- Bootstrap JS -->

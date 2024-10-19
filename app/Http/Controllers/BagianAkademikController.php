@@ -17,8 +17,12 @@ class BagianAkademikController extends Controller
     }
     public function indexPengalokasianRuang()
     {
-        $alokasiRuang = PengalokasianRuang::all(); // Mengambil semua data ruang perkuliahan
+        $alokasiRuang = PengalokasianRuang::all(); 
+        // $alokasiRuang = PengalokasianRuang::with('programStudi')->get(); 
+        // $rejectedPengajuansruang = session('rejected_pengajuansruang', []); 
+
         return view('bagianakademik.lihatpengalokasianruang', compact('alokasiRuang'));
+        // return view('bagianakademik.lihatpengalokasianruang', compact('alokasiRuang', 'rejectedPengajuansruang'));
     }
     public function createPenyusunanRuang()
     {
@@ -127,7 +131,7 @@ class BagianAkademikController extends Controller
             'kapasitas' => $validatedData['kapasitas'],
         ]);
 
-        RuangPerkuliahan::where('kode_ruang', $kode_ruang) -> update($ruangPerkuliahan);
+        RuangPerkuliahan::where('kode_ruang', $kode_ruang)->update($ruangPerkuliahan);
         // Redirect setelah sukses
         return redirect()->route('penyusunanruang.lihat')->with('success', 'Data berhasil diupdate');
     }

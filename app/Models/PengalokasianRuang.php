@@ -30,4 +30,5 @@ class PengalokasianRuang extends Model
     {
         return $this->belongsTo(ProgramStudi::class, 'id_programstudi', 'id_programstudi');
     }
+
 }

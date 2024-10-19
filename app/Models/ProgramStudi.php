@@ -43,6 +43,7 @@ class ProgramStudi extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id_programstudi',
         'nama_programstudi',
         'id_fakultas',
     ];
