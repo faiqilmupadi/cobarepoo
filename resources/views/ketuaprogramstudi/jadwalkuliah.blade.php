@@ -187,7 +187,7 @@
 
                 <div class="action-buttons">
                     <button type="submit">Simpan</button>
-                    <button type="button">Lihat</button>
+                    <button type="button" onclick="window.location.href='{{ route('lihatjadwalkuliah.lihat') }}'">Lihat</button>
                 </div>
             </form>
             <main>

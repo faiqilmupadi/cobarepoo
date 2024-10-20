@@ -102,6 +102,18 @@
             max-width: 500px;
         }
 
+        button[type="lihat"] {
+            padding: 12px 25px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+            max-width: 500px;
+        }
+
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
@@ -183,6 +195,8 @@
 
                 <button type="submit">Simpan Mata Kuliah</button>
             </form>
+            <button type="Lihat" onclick="window.location.href='{{ route('memilihmatakuliah.index') }}'">lihat Mata
+                Kuliah </button>
         </main>
     </div>
 

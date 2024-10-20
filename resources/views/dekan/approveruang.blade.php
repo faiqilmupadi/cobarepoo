@@ -75,7 +75,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Kode Ruang</th>
-                        <th>ID Program Studi</th>
+                        <th>Nama Program Studi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -109,19 +109,14 @@
                             </td>
                         </tr>
                     @endforeach
-
-                    <!-- Menampilkan pengajuan yang ditolak dari session -->
-                    {{-- @foreach (session('rejected_pengajuansruang', []) as $rejectedPengajuanruang)
+                    @if ($pengajuans_ruang->isEmpty())
                         <tr>
-                            <td>{{ $rejectedPengajuanruang['kode_ruang'] }}</td>
-                            <td>{{ $rejectedPengajuanruang['nama_programstudi'] ?? 'Program studi tidak ditemukan' }}
-                            </td>
-                            <td><span class="text-danger">Ditolak</span></td>
+                            <td colspan="6" class="text-center">Tidak ada pengajuan alokasi ruang.</td>
                         </tr>
-                    @endforeach --}}
+                    @endif
                 </tbody>
-
             </table>
+
             <div class="btn-container">
                 <button type="button" class="btn btn-outline-secondary"
                     onclick="window.location.href='{{ route('dekan') }}'">←</button>

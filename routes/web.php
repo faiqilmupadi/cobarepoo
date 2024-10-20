@@ -57,10 +57,10 @@ Route::post('penyusunanruang', [BagianAkademikController::class, 'storePenyusuna
 // Route::get('lihatpenyusunanruang', function () {
 //     return view('bagianakademik.lihatpenyusunanruang', ['title' => 'lihatpenyusunanruang']);
 // })->name('lihatpenyusunanruang');
-Route::get('penyusunanruang/lihat', [BagianAkademikController::class, 'indexPenyusunanRuang'])->name('penyusunanruang.lihat');
-Route::get('penyusunanruang/{kode_ruang}/edit', [BagianAkademikController::class, 'edit'])->name('penyusunanruang.edit');
-Route::put('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'update'])->name('penyusunanruang.update');
-Route::delete('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'destroy'])->name('penyusunanruang.destroy');
+Route::get('penyusunanruang/index', [BagianAkademikController::class, 'indexPenyusunanRuang'])->name('penyusunanruang.index');
+Route::get('penyusunanruang/{kode_ruang}/edit', [BagianAkademikController::class, 'editPenyusunanRuang'])->name('penyusunanruang.edit');
+Route::put('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'updatePenyusunanRuang'])->name('penyusunanruang.update');
+Route::delete('penyusunanruang/{kode_ruang}', [BagianAkademikController::class, 'destroyPenyusunanRuang'])->name('penyusunanruang.destroy');
 
 // bagian akademik pengalokasian ruang
 Route::get('bagianakademik/pengalokasianruang', [BagianAkademikController::class, 'createPengalokasianRuang'])->name('pengalokasianruang.create');
@@ -79,13 +79,17 @@ Route::patch('/dekan/update-pengajuan/{id}', [DekanController::class, 'updatePen
 // Route::get('memilihmatakuliah', function () {
 //     return view('ketuaprogramstudi.memilihmatakuliah', ['title' => 'memilihmatakuliah']);
 // })->name('memilihmatakuliah');
-Route::get('memilihmatakuliah', [KetuaProgramStudiController::class, 'createMemilihMataKuliah'])->name('memilihmatakuliah.create');
+Route::get('memilihmatakuliah/create', [KetuaProgramStudiController::class, 'createMemilihMataKuliah'])->name('memilihmatakuliah.create');
 Route::post('memilihmatakuliah', [KetuaProgramStudiController::class, 'storeMemilihMataKuliah'])->name('memilihmatakuliah.store');
+Route::get('/memilihmatakuliah', [KetuaProgramStudiController::class, 'indexMemilihMataKuliah'])->name('memilihmatakuliah.index');
+Route::get('memilihmatakuliah/{kode_mk}/edit', [KetuaProgramStudiController::class, 'editMemilihMataKuliah'])->name('memilihmatakuliah.edit');
+Route::put('memilihmatakuliah/{kode_mk}', [KetuaProgramStudiController::class, 'updateMemilihMataKuliah'])->name('memilihmatakuliah.update');
+Route::delete('memilihmatakuliah/{kode_mk}', [KetuaProgramStudiController::class, 'destroyMemilihMataKuliah'])->name('memilihmatakuliah.destroy');
 
 //kaprodi jadwal kuliah
 Route::get('JadwalKuliah', [KetuaProgramStudiController::class, 'createJadwalKuliah'])->name('jadwalkuliah.create');
 Route::post('JadwalKuliah', [KetuaProgramStudiController::class, 'storeJadwalKuliah'])->name('jadwalkuliah.store');
-
+Route::get('Ketuaprogramstudi/jadwalkuliah/lihatjadwalkuliah', [KetuaProgramStudiController::class, 'indexjadwalKuliah'])->name('lihatjadwalkuliah.lihat');
 // login
 Route::get('register', [UserController::class, 'register'])->name('register');
 Route::post('register', [UserController::class, 'register_action'])->name('register.action');
@@ -95,7 +99,4 @@ Route::get('password', [UserController::class, 'password'])->name('password');
 Route::post('password', [UserController::class, 'password_action'])->name('password.action');
 Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
-// Route::get('memilihmatakuliah/{kode_mk}', [KetuaProgramStudiController::class, 'show'])->name('memilihmatakuliah.show');
-// Route::get('memilihmatakuliah/{id}/edit', [KetuaProgramStudiController::class, 'edit'])->name('memilihmatakuliah.edit');
-// Route::put('memilihmatakuliah/{id}', [KetuaProgramStudiController::class, 'update'])->name('memilihmatakuliah.update');
-// Route::delete('memilihmatakuliah/{id}', [KetuaProgramStudiController::class, 'destroy'])->name('memilihmatakuliah.destroy');
+

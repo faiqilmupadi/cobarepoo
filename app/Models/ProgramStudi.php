@@ -43,7 +43,6 @@ class ProgramStudi extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'id_programstudi',
         'nama_programstudi',
         'id_fakultas',
     ];
@@ -74,12 +73,3 @@ class ProgramStudi extends Model
     }
 }
 
-// // Mengambil data program studi dan fakultas terkait
-// $programStudi = ProgramStudi::find(1);
-
-// if ($programStudi) {
-//     echo 'Nama Program Studi: ' . $programStudi->nama_programstudi . PHP_EOL;
-//     echo 'Nama Fakultas: ' . $programStudi->fakultas->nama_fakultas . PHP_EOL;
-// } else {
-//     echo 'Program studi tidak ditemukan.' . PHP_EOL;
-// }

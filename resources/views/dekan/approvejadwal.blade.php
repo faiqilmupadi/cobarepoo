@@ -74,10 +74,12 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Kode Mata Kuliah</th>
+                        <th>Nama Mata Kuliah</th>
                         <th>Kode Ruang</th>
                         <th>Hari</th>
                         <th>Jam</th>
                         <th>Nama Kelas</th>
+                        <th>Nama Dosen Pengampu</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -85,14 +87,16 @@
                     @foreach ($pengajuans as $pengajuan)
                         <tr>
                             <td>{{ $pengajuan->kode_mk }}</td>
+                            <td>{{ $pengajuan->mataKuliah->nama_mk ?? 'mata kuliah tidak ditemukan' }}</td>
                             <td>{{ $pengajuan->kode_ruang }}</td>
                             <td>{{ $pengajuan->hari }}</td>
                             <td>{{ $pengajuan->jam }}</td>
                             <td>{{ $pengajuan->nama_kelas }}</td>
+                            <td>{{ $pengajuan->mataKuliah->dosenPengampu->nama_dosenpengampu ?? 'dosen pengampu tidak ditemukan' }}</td>
                             <td>
-                                @if (session('approved_pengajuans') && array_key_exists($pengajuan->id, session('approved_pengajuans')))
+                                @if ($pengajuan->status === 'disetujui')
                                     <span class="text-success">Disetujui</span>
-                                @elseif (session('rejected_pengajuans') && array_key_exists($pengajuan->id, session('rejected_pengajuans')))
+                                @elseif ($pengajuan->status === 'ditolak')
                                     <span class="text-danger">Ditolak</span>
                                 @else
                                     <form action="{{ route('pengajuan.updatejadwal', $pengajuan->id) }}" method="POST"
@@ -115,53 +119,18 @@
                             </td>
                         </tr>
                     @endforeach
-
-                    <!-- Menampilkan pengajuan yang disetujui -->
-                    @foreach (session('approved_pengajuans', []) as $approved)
-                        @if (
-                            !empty($approved['kode_mk']) &&
-                                !empty($approved['kode_ruang']) &&
-                                !empty($approved['hari']) &&
-                                !empty($approved['jam']) &&
-                                !empty($approved['nama_kelas']))
-                            <tr>
-                                <td>{{ $approved['kode_mk'] }}</td>
-                                <td>{{ $approved['kode_ruang'] }}</td>
-                                <td>{{ $approved['hari'] }}</td>
-                                <td>{{ $approved['jam'] }}</td>
-                                <td>{{ $approved['nama_kelas'] }}</td>
-                                <td><span class="text-success">Disetujui</span></td>
-                            </tr>
-                        @endif
-                    @endforeach
-
-                    <!-- Menampilkan pengajuan yang ditolak -->
-                    @foreach (session('rejected_pengajuans', []) as $rejected)
-                        @if (
-                            !empty($rejected['kode_mk']) &&
-                                !empty($rejected['kode_ruang']) &&
-                                !empty($rejected['hari']) &&
-                                !empty($rejected['jam']) &&
-                                !empty($rejected['nama_kelas']))
-                            <tr>
-                                <td>{{ $rejected['kode_mk'] }}</td>
-                                <td>{{ $rejected['kode_ruang'] }}</td>
-                                <td>{{ $rejected['hari'] }}</td>
-                                <td>{{ $rejected['jam'] }}</td>
-                                <td>{{ $rejected['nama_kelas'] }}</td>
-                                <td><span class="text-danger">Ditolak</span></td>
-                            </tr>
-                        @endif
-                    @endforeach
-
-                    <!-- Jika tidak ada pengajuan yang disetujui atau ditolak -->
-                    @if (count(session('approved_pengajuans', [])) === 0 && count(session('rejected_pengajuans', [])) === 0)
+                    @if ($pengajuans->isEmpty())
                         <tr>
                             <td colspan="6" class="text-center">Tidak ada pengajuan jadwal kuliah.</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
+
+            <div class="btn-container">
+                <button type="button" class="btn btn-outline-secondary"
+                    onclick="window.location.href='{{ route('dekan') }}'">←</button>
+            </div>
         </div>
 
         <!-- Bootstrap JS -->

@@ -102,7 +102,7 @@
 
         <!-- Table -->
         <div class="table-container">
-            <h4 class="mt-4">Daftar Ruang Perkuliahan</h4>
+            <h4 class="mt-4">Daftar Alokasi Ruang Perkuliahan</h4>
 
             @if ($errors->any())
                 <div class="pt-3">
@@ -150,18 +150,7 @@
                             </td>
                         </tr>
                     @endforeach
-                    <!-- Tampilkan pengajuan yang ditolak dari session -->
-                    {{-- @if (count($rejectedPengajuansruang) > 0)
-                        @foreach ($rejectedPengajuansruang as $rejectedPengajuan)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $rejectedPengajuan['kode_ruang'] }}</td>
-                                <td>{{ $rejectedPengajuan['nama_programstudi'] ?? 'Program studi tidak ditemukan' }}
-                                </td>
-                                <td><span class="text-danger">Ditolak</span></td>
-                            </tr>
-                        @endforeach
-                    @endif --}}
+
                 </tbody>
             </table>
         </div>

@@ -13,11 +13,11 @@ class BagianAkademikController extends Controller
     public function indexPenyusunanRuang()
     {
         $ruangPerkuliahan = RuangPerkuliahan::all(); // Mengambil semua data ruang perkuliahan
-        return view('bagianakademik.lihatpenyusunanruang', compact('ruangPerkuliahan'));
+        return view('bagianakademik.penyusunanruang.index', compact('ruangPerkuliahan'));
     }
     public function indexPengalokasianRuang()
     {
-        $alokasiRuang = PengalokasianRuang::all(); 
+        $alokasiRuang = PengalokasianRuang::all();
         // $alokasiRuang = PengalokasianRuang::with('programStudi')->get(); 
         // $rejectedPengajuansruang = session('rejected_pengajuansruang', []); 
 
@@ -26,7 +26,7 @@ class BagianAkademikController extends Controller
     }
     public function createPenyusunanRuang()
     {
-        return view('bagianakademik.penyusunanruang');
+        return view('bagianakademik.penyusunanruang.create');
     }
 
     // Menampilkan form penyusunan ruang
@@ -94,6 +94,15 @@ class BagianAkademikController extends Controller
                 ]
             );
 
+            // Cek apakah ada alokasi ruang yang sudah ada dengan status 'disetujui' atau 'menunggu konfirmasi'
+            $existingPengajuan = PengalokasianRuang::where('kode_ruang', $validatedData['kode_ruang'])
+                ->whereIn('status', ['disetujui', 'menunggu konfirmasi'])
+                ->first();
+
+            if ($existingPengajuan) {
+                // Jika sudah ada pengajuan, berikan pesan error
+                return redirect()->back()->withErrors(['error' => 'Alokasi ruang sudah pernah diajukan dengan status ' . $existingPengajuan->status])->withInput();
+            }
             // Menyimpan data ke tabel pengalokasianruang
             PengalokasianRuang::create([
                 'kode_ruang' => $validatedData['kode_ruang'],
@@ -106,13 +115,13 @@ class BagianAkademikController extends Controller
         }
     }
 
-    public function edit(string $kode_ruang)
+    public function editPenyusunanRuang(string $kode_ruang)
     {
         $ruangPerkuliahan = RuangPerkuliahan::findOrFail($kode_ruang);
-        return view('bagianakademik.editpenyusunanruang', compact('ruangPerkuliahan'));
+        return view('bagianakademik.penyusunanruang.edit', compact('ruangPerkuliahan'));
     }
 
-    public function update(Request $request, string $kode_ruang)
+    public function updatePenyusunanRuang(Request $request, string $kode_ruang)
     {
 
         $validatedData = $request->validate(
@@ -133,12 +142,12 @@ class BagianAkademikController extends Controller
 
         RuangPerkuliahan::where('kode_ruang', $kode_ruang)->update($ruangPerkuliahan);
         // Redirect setelah sukses
-        return redirect()->route('penyusunanruang.lihat')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('penyusunanruang.index')->with('success', 'Data berhasil diupdate');
     }
 
-    public function destroy(string $kode_ruang)
+    public function destroyPenyusunanRuang(string $kode_ruang)
     {
         RuangPerkuliahan::where('kode_ruang', $kode_ruang)->delete();
-        return redirect()->route('penyusunanruang.lihat')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('penyusunanruang.index')->with('success', 'Data berhasil dihapus');
     }
 }

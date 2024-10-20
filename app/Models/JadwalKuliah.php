@@ -21,6 +21,7 @@ class JadwalKuliah extends Model
         'jam',
         'nama_kelas',
         'nidn_dosenpengampu',
+        'status',
     ];
 
     // Relasi dengan Kelas
