@@ -167,7 +167,7 @@
             <h1>SATE</h1>
             <h2>Sistem Akademik Terpadu Efisien</h2>
         </div>
-    </div>
+    </div>esdwa
 
     <div class="container">
         @include('komponen.pesan')

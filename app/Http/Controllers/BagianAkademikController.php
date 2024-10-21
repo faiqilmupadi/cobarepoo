@@ -109,7 +109,7 @@ class BagianAkademikController extends Controller
                 'id_programstudi' => $validatedData['id_programstudi'],
             ]);
 
-            return redirect()->route('pengalokasianruang.create')->with('successAjukan', 'Pengalokasian ruang telah diajukan ke dekan.');
+            return redirect()->route('pengalokasianruang.create')->with('success', 'Pengalokasian ruang telah diajukan ke dekan.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }

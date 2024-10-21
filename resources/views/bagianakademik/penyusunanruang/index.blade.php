@@ -55,9 +55,9 @@
             </table>
         </div>
 
-        <div class="btn-container">
-            <button type="button" class="btn btn-outline-secondary"
-                onclick="window.location.href='{{ route('penyusunanruang.create') }}'">←</button>
-        </div>
+    </div>
+    <div class="btn-container">
+        <button type="button" class="btn btn-outline-secondary"
+            onclick="window.location.href='{{ route('penyusunanruang.create') }}'">←</button>
     </div>
 @endsection

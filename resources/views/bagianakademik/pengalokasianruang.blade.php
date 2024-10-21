@@ -122,27 +122,7 @@
 
         <h5>Pengisian Data Alokasi Ruangan: </h5>
         <br>
-        @if (session('successAjukan'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('successAjukan') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
-
-        @if ($errors->any())
-            <div class="pt-3">
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $item)
-                            <li>{{ $item }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
+        @include('komponen.pesan')
 
         <div class="form">
             <form action="{{ route('pengalokasianruang.store') }}" method="POST">
@@ -153,7 +133,8 @@
                         <option value="">Pilih Kode Ruang</option>
                         @foreach ($ruangPerkuliahan as $ruang)
                             <option value="{{ $ruang->kode_ruang }}"
-                                {{ old('kode_ruang', Session::get('kode_ruang')) == $ruang->kode_ruang ? 'selected' : '' }}>{{ $ruang->kode_ruang }}
+                                {{ old('kode_ruang', Session::get('kode_ruang')) == $ruang->kode_ruang ? 'selected' : '' }}>
+                                {{ $ruang->kode_ruang }}
                             </option>
                         @endforeach
                     </select>
@@ -179,7 +160,8 @@
                     <!-- Tombol simpan dan lihat di sebelah kanan -->
                     <div class="btn-right">
                         <button type="submit" class="btn btn-custom">AJUKAN</button>
-                        <button type="button" class="btn btn-custom-secondary" onclick="window.location.href='{{ route('pengalokasianruang.lihat') }}'">LIHAT</button>
+                        <button type="button" class="btn btn-custom-secondary"
+                            onclick="window.location.href='{{ route('pengalokasianruang.lihat') }}'">LIHAT</button>
 
                     </div>
                 </div>
