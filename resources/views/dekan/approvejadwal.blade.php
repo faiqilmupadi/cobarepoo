@@ -77,7 +77,8 @@
                         <th>Nama Mata Kuliah</th>
                         <th>Kode Ruang</th>
                         <th>Hari</th>
-                        <th>Jam</th>
+                        <th>Jam Mulai</th>
+                        <th>Jam Selesai</th>
                         <th>Nama Kelas</th>
                         <th>Nama Dosen Pengampu</th>
                         <th>Aksi</th>
@@ -90,7 +91,8 @@
                             <td>{{ $pengajuan->mataKuliah->nama_mk ?? 'mata kuliah tidak ditemukan' }}</td>
                             <td>{{ $pengajuan->kode_ruang }}</td>
                             <td>{{ $pengajuan->hari }}</td>
-                            <td>{{ $pengajuan->jam }}</td>
+                            <td>{{ $pengajuan->jam_mulai }}</td>
+                            <td>{{ $pengajuan->jam_selesai }}</td>
                             <td>{{ $pengajuan->nama_kelas }}</td>
                             <td>{{ $pengajuan->mataKuliah->dosenPengampu->nama_dosenpengampu ?? 'dosen pengampu tidak ditemukan' }}</td>
                             <td>

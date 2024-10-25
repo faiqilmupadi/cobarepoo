@@ -13,14 +13,17 @@ class MahasiswaFactory extends Factory
 
     public function definition()
     {
-        $user = User::where('email', 'like', '%@students.undip.ac.id')->inRandomOrder()->first();
+        $user = User::where('email', 'like', '%@students.undip.ac.id')
+            ->whereDoesntHave('mahasiswa') // Pastikan belum digunakan di tabel dosen
+            ->inRandomOrder()
+            ->first();
         $pembimbingakademik = PembimbingAkademik::inRandomOrder()->first();
 
         return [
-            'nim' => $this->faker->unique()->numerify('24060122#####'), // 14 karakter
+            'nim' => $this->faker->unique()->numerify('24060122######'), // 14 karakter
             'nama_mahasiswa' => $user->name,
             'semester' => $this->faker->numberBetween(4, 6),
-            'email' => $user ? $user->email : null, // Menggunakan email dari user yang baru dibuat
+            'email' => $user->email, // Menggunakan email dari user yang baru dibuat
             'nidn_pembimbingakademik' => $pembimbingakademik->nidn_pembimbingakademik,
             'id_programstudi' => 1,
             'id_fakultas' => 1,

@@ -57,4 +57,9 @@ class DosenPengampu extends Model
     public function matakuliah(){
         return $this->hasMany(MataKuliah::class, 'nidn_dosenpengampu', 'nidn_dosenpengampu');
     }
+
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nidn_dosenpengampu', 'nidn');
+    }
 }

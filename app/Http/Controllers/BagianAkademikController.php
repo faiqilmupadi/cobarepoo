@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\RuangPerkuliahan;
 use App\Models\PengalokasianRuang;
 use App\Models\ProgramStudi;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BagianAkademikController extends Controller
@@ -18,11 +20,8 @@ class BagianAkademikController extends Controller
     public function indexPengalokasianRuang()
     {
         $alokasiRuang = PengalokasianRuang::all();
-        // $alokasiRuang = PengalokasianRuang::with('programStudi')->get(); 
-        // $rejectedPengajuansruang = session('rejected_pengajuansruang', []); 
 
         return view('bagianakademik.lihatpengalokasianruang', compact('alokasiRuang'));
-        // return view('bagianakademik.lihatpengalokasianruang', compact('alokasiRuang', 'rejectedPengajuansruang'));
     }
     public function createPenyusunanRuang()
     {
@@ -150,4 +149,6 @@ class BagianAkademikController extends Controller
         RuangPerkuliahan::where('kode_ruang', $kode_ruang)->delete();
         return redirect()->route('penyusunanruang.index')->with('success', 'Data berhasil dihapus');
     }
+
+
 }

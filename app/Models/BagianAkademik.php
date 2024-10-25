@@ -39,4 +39,9 @@ class BagianAkademik extends Model
     {
         return $this->belongsTo(Fakultas::class, 'id_fakultas', 'id_fakultas');
     }
+
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nidn_bagianakademik', 'nidn');
+    }
 }

@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('dosenpengampu', function (Blueprint $table) {
             // Mengatur nidn_dosen sebagai primary key
-            $table->string('nidn_dosenpengampu',18)->primary(); // NIDN dosen sebagai primary key
+            $table->string('nidn_dosenpengampu',18); // NIDN dosen sebagai primary key
             $table->string('nama_dosenpengampu', 50); // Nama dosen
             $table->timestamps(); // Timestamps for created_at and updated_at
+
+            $table->primary('nidn_dosenpengampu');
+
+            // Menambahkan foreign key constraints
+            $table->foreign('nidn_dosenpengampu')->references('nidn')->on('dosen')->onDelete('cascade'); // Merujuk ke nidn di tabel dosen
         });
     }
 

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Dosen;
 use App\Models\PembimbingAkademik;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -12,17 +13,25 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class PembimbingAkademikFactory extends Factory
 {
     protected $model = PembimbingAkademik::class;
-    
+
     public function definition(): array
     {
-        $user = User::where('email', 'like', '%@lecturer.undip.ac.id')->inRandomOrder()->first();
+        // Mengambil dosen yang belum memiliki relasi dengan PembimbingAkademik (berdasarkan nidn)
+        $dosen = Dosen::whereDoesntHave('pembimbingakademik') // Pastikan dosen belum ada di tabel PembimbingAkademik
+            ->inRandomOrder()
+            ->first();
+
+        // Jika tidak ada dosen yang tersedia, bisa mengembalikan nilai default atau menangani null case
+        if (!$dosen) {
+            return [];
+        }
 
         return [
-            'nidn_pembimbingakademik' => $this->faker->unique()->numerify('198101020000000###'), 
-            'nama_pembimbingakademik' => $user->name, 
-            'id_programstudi' => 1, 
-            'email' => $user->email, 
-            'id_fakultas' => 1, 
+            'nidn_pembimbingakademik' => $dosen->nidn, // NIDN unik dari dosen
+            'nama_pembimbingakademik' => $dosen->nama_dosen, // Nama dosen yang diambil dari tabel Dosen
+            'id_programstudi' => 1,
+            'email' => $dosen->email, // Email dosen
+            'id_fakultas' => 1,
         ];
     }
 }

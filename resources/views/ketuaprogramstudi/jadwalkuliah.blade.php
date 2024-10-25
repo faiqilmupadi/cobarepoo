@@ -16,6 +16,7 @@
 
         header {
             background-color: #5c6f3d;
+            /* Header color */
             padding: 15px;
             display: flex;
             align-items: center;
@@ -74,17 +75,30 @@
 
         button {
             padding: 12px 0;
-            background-color: #007bff;
-            border: none;
-            color: white;
             font-size: 16px;
             font-weight: 600;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        button:hover {
+        /* Ajukan button (blue) */
+        .ajukan-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .ajukan-btn:hover {
             background-color: #0056b3;
+        }
+
+        /* Lihat button (green) */
+        .lihat-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .lihat-btn:hover {
+            background-color: #218838;
         }
 
         .action-buttons {
@@ -113,6 +127,16 @@
         .back-btn:hover {
             background-color: #333;
         }
+
+        /* Adjust jam mulai and jam berakhir styles */
+        .time-select {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .time-select select {
+            width: 48%;
+        }
     </style>
 </head>
 
@@ -130,11 +154,7 @@
             <h3>PENYUSUNAN JADWAL KULIAH</h3>
             <form action="{{ route('jadwalkuliah.store') }}" method="POST">
                 @csrf <!-- Token CSRF untuk keamanan -->
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -144,24 +164,41 @@
                         </ul>
                     </div>
                 @endif
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+                <!-- Dropdown untuk Program Studi -->
+                <label for="programstudi">Pilih Program Studi:</label>
+                <select id="programstudi" name="programstudi" class="form-control">
+                    <option value="">-- Pilih Program Studi --</option>
+                    @foreach ($programstudi as $ps)
+                        <option value="{{ $ps->id_programstudi }}">{{ $ps->nama_programstudi }}</option>
+                    @endforeach
+                </select>
 
+                <select name="kode_ruang" id="ruangan">
+                    @foreach ($ruangperkuliahan as $ruang)
+                        <option value="{{ $ruang->kode_ruang }}">{{ $ruang->nama_ruangan }}</option>
+                    @endforeach
+                </select>
+
+
+                <!-- Mata Kuliah -->
                 <select id="kode_mk" name="kode_mk" required>
-                    <option value="">Pilih Nama Mata kuliah</option>
+                    <option value="">Pilih Nama Mata Kuliah</option>
                     @foreach ($matakuliah as $mk)
                         <option value="{{ $mk->kode_mk }}">{{ $mk->nama_mk }}</option>
                     @endforeach
                 </select>
 
-                <select id="kode_ruang" name="kode_ruang" required>
-                    <option value="">Pilih Nama Ruang</option>
-                    @foreach ($ruangperkuliahan as $rp)
-                        <option value="{{ $rp->kode_ruang }}">{{ $rp->kode_ruang }}</option>
-                    @endforeach
-                </select>
-
-
+                <!-- Pilih Hari -->
                 <select id="hari" name="hari" required>
-                    <option value="">Daftar Hari</option>
+                    <option value="">Pilih Hari</option>
                     <option value="senin">Senin</option>
                     <option value="selasa">Selasa</option>
                     <option value="rabu">Rabu</option>
@@ -169,15 +206,22 @@
                     <option value="jumat">Jumat</option>
                 </select>
 
-                <select id="jam" name="jam" required>
-                    <option value="">Pilih Jam Mulai</option>
-                    <option value="07:00">07:00</option>
-                    <option value="09:00">09:00</option>
-                    <option value="13:00">13:00</option>
-                </select>
+                <!-- Jam Mulai dan Berakhir -->
+                <div class="time-select">
+                    <select id="jam_mulai" name="jam" required>
+                        <option value="">Pilih Jam Mulai</option>
+                        <option value="07:00">07:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="13:00">13:00</option>
+                    </select>
+                    <span id="jam_selesai_display">Jam Berakhir (otomatis)</span>
+                </div>
 
+                <!-- Input Hidden untuk Jam Mulai dan Selesai -->
+                <input type="hidden" id="jam_mulai_hidden" name="jam_mulai">
+                <input type="hidden" id="jam_selesai_hidden" name="jam_selesai">
 
-
+                <!-- Kelas -->
                 <select id="nama_kelas" name="nama_kelas" required>
                     <option value="">Pilih Kelas</option>
                     @foreach ($kelas as $kelas)
@@ -186,14 +230,63 @@
                 </select>
 
                 <div class="action-buttons">
-                    <button type="submit">Simpan</button>
-                    <button type="button" onclick="window.location.href='{{ route('lihatjadwalkuliah.lihat') }}'">Lihat</button>
+                    <button type="submit" class="ajukan-btn">Ajukan</button>
+                    <button type="button" class="lihat-btn"
+                        onclick="window.location.href='{{ route('lihatjadwalkuliah.lihat') }}'">Lihat</button>
                 </div>
             </form>
-            <main>
+        </main>
     </div>
 
-    <button class="back-btn" onclick="window.location.href='{{ route('ketuaprogramstudi') }}'">←</button>
+    <button class="back-btn" onclick="window.location.href='{{ route('ketuaprogramstudi') }}'">&larr;</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#programstudi').on('change', function() {
+                var id_programstudi = $(this).val();
+                if (id_programstudi) {
+                    $.ajax({
+                        url: '/getRuangan/' + id_programstudi,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#ruangan').empty();
+                            $('#ruangan').append(
+                                '<option value="">-- Pilih Ruangan --</option>');
+                            $.each(data, function(key, value) {
+                                $('#ruangan').append('<option value="' + value
+                                    .kode_ruang + '">' + value.kode_ruang +
+                                    '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#ruangan').empty().append('<option value="">-- Pilih Ruangan --</option>');
+                }
+            });
+
+            $('#jam_mulai').on('change', function() {
+                const jamMulai = $(this).val();
+                const kodeMk = $('#kode_mk').val();
+
+                $.ajax({
+                    url: '{{ route('jadwalkuliah.hitungJamSelesai') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        jam: jamMulai,
+                        kode_mk: kodeMk
+                    },
+                    success: function(response) {
+                        $('#jam_selesai_display').text(response.jam_selesai);
+                        $('#jam_mulai_hidden').val(jamMulai);
+                        $('#jam_selesai_hidden').val(response.jam_selesai);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

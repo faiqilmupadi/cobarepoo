@@ -96,4 +96,9 @@ class User extends Authenticatable
         return $this->hasOne(BagianAkademik::class, 'email', 'email');
     }
 
+    public function dosen()
+    {
+        return $this->hasOne(Dosen::class, 'email', 'email');
+    }
+
 }

@@ -116,10 +116,12 @@
                         <th>No</th>
                         <th>Kode Mata Kuliah</th>
                         <th>Nama Mata Kuliah</th>
-                        <th>Nama Dosen Pengampu</th>
-                        <th>Ruangan</th>
+                        <th>Kode Ruang</th>
                         <th>Hari</th>
                         <th>Jam Mulai</th>
+                        <th>Jam Selesai</th>
+                        <th>Nama Kelas</th>
+                        <th>Nama Dosen Pengampu</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -128,11 +130,13 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $item['kode_mk'] }}</td> <!-- Perbaiki nama kolom -->
-                            <td>{{ $item['nama_kelas'] }}</td> <!-- Perbaiki nama kolom -->
-                            <td> {{ $item->mataKuliah->dosenPengampu->nama_dosenpengampu ?? 'N/A' }}</td>
+                            <td>{{ $item['nama_mk'] }}</td> <!-- Perbaiki nama kolom -->
                             <td>{{ $item['kode_ruang'] }}</td> <!-- Perbaiki nama kolom -->
                             <td>{{ $item['hari'] }}</td> <!-- Sudah benar -->
-                            <td>{{ $item['jam'] }}</td> <!-- Perbaiki nama kolom -->
+                            <td>{{ $item['jam_mulai'] }}</td> <!-- Perbaiki nama kolom -->
+                            <td>{{ $item['jam_selesai'] }}</td> <!-- Perbaiki nama kolom -->
+                            <td>{{ $item['nama_kelas'] }}</td> <!-- Perbaiki nama kolom -->
+                            <td> {{ $item->mataKuliah->dosenPengampu->nama_dosenpengampu ?? 'N/A' }}</td>
                             <td>{{ $item['status'] }}</td> <!-- Sudah benar -->
                         </tr>
                     @endforeach

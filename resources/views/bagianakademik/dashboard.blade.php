@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-    <title>Dashboard Bagian Akademik (Bisma)</title>
+    <title>Dashboard Bagian Akademik</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -148,8 +148,10 @@
         <div class="status-section">
             <div class="status-details">
                 <h3>Status Pegawai</h3>
-                <p><strong>Nama Pegawai : </strong>Ahmad dhani</p>
-                <p><strong>NIP Pegawai : </strong> 12455662462</p>
+                <p><strong>Nama Pegawai: </strong>{{ $user->name ?? 'User tidak ditemukan' }}</p>
+                <p><strong>NIDN: </strong>{{ $nidn ?? 'NIDN tidak ditemukan' }}</p>
+
+
                 <p><strong>Masa Jabatan:</strong> 2018 - 2038</p>
                 <p><strong>Fakultas:</strong> Fakultas Sains Matematika</p>
             </div>
@@ -157,17 +159,26 @@
         </div>
 
         <div class="d-grid gap-4">
-            <button type="button" class="btn btn-outline-success btn-lg" onclick="window.location.href='{{ route('penyusunanruang.create') }}'">Penyusunan Ruang Perkuliahan</button>
-            <button type="button" class="btn btn-outline-success btn-lg" onclick="window.location.href='{{ route('pengalokasianruang.create') }}'">Pengalokasian Ruang Perkuliahan</button>
+            <button type="button" class="btn btn-outline-success btn-lg"
+                onclick="window.location.href='{{ route('penyusunanruang.create') }}'">Penyusunan Ruang
+                Perkuliahan</button>
+            <button type="button" class="btn btn-outline-success btn-lg"
+                onclick="window.location.href='{{ route('pengalokasianruang.create') }}'">Pengalokasian Ruang
+                Perkuliahan</button>
         </div>
     </div>
+
 
     <div class="profile">
         <img src="profile.png" alt="Profile Image">
         <div class="profile-name">
-            <p>Nama: Nama Pegawai</p>
-            <p>NIP: 66666666</p>
+            <p>Nama: {{ $user->name ?? 'User tidak ditemukan' }}</p>
+            <p>NIDN: {{ $nidn ?? 'NIDN tidak ditemukan' }}</p>
             <p>Informatika</p>
+        </div>
+        <div class="btn-container">
+            <button type="button" class="btn btn-outline-secondary"
+                onclick="window.location.href='{{ route('logout') }}'">Logout</button>
         </div>
     </div>
 

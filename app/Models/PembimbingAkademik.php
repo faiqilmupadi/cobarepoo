@@ -54,4 +54,8 @@ class PembimbingAkademik extends Model
         return $this->hasMany(Mahasiswa::class, 'nidn_pembimbingakademik', 'nidn_pembimbingakademik');
     }
 
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nidn_pembimbingakademik', 'nidn');
+    }
 }

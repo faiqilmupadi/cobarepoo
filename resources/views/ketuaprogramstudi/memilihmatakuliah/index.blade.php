@@ -4,12 +4,6 @@
     <div class="container">
         <h3>Daftar Mata Kuliah</h3>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -30,7 +24,7 @@
                         <td>{{ $mk->semester }}</td>
                         <td>{{ $mk->sks }}</td>
                         <td>{{ $mk->jenis }}</td>
-                        <td>{{ $mk->dosenpengampu->nama_dosenpengampu }}</td>
+                        <td>{{ $mk->dosenpengampu ? $mk->dosenpengampu->nama_dosenpengampu : 'Tidak ada data' }}</td>
                         <td>
                             <a href="{{ route('memilihmatakuliah.edit', $mk->kode_mk) }}" class="btn btn-warning">Edit</a>
 

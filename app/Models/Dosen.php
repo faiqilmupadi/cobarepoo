@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ketuaprogramstudi extends Model
+class Dosen extends Model
 {
     use HasFactory;
 
     // Mengatur primary key (default di Laravel adalah 'id', jadi kita sesuaikan)
-    protected $primaryKey = 'nidn_ketuaprogramstudi';
+    protected $primaryKey = 'nidn';
     public $incrementing = false; // Primary key tipe string, bukan integer yang auto-increment
     
     protected $keyType = 'string'; // Tipe data dari primary key adalah string
 
     // Tentukan tabel yang terkait dengan model ini (jika nama tabel berbeda dari plural model)
-    protected $table = 'ketuaprogramstudi';
+    protected $table = 'dosen';
 
     // Kolom yang bisa diisi secara massal
     protected $fillable = [
-        'nidn_ketuaprogramstudi',
-        'nama_ketuaprogramstudi',
+        'nidn',
+        'nama_dosen',
         'email',
         'id_programstudi',
         'id_fakultas',
@@ -45,8 +45,40 @@ class Ketuaprogramstudi extends Model
         return $this->belongsTo(Fakultas::class, 'id_fakultas', 'id_fakultas');
     }
 
-    public function dosen()
+    public function dekan()
     {
-        return $this->belongsTo(Dosen::class, 'nidn_ketuaprogramstudi', 'nidn');
+        return $this->hasOne(Dekan::class, 'nidn_dekan', 'nidn');
+    }
+
+    /**
+     * Relasi dengan ketua program studi.
+     * Satu user bisa menjadi satu ketua program studi.
+     */
+    public function ketuaProgramStudi()
+    {
+        return $this->hasOne(KetuaProgramStudi::class, 'nidn_ketuaprogramstudi', 'nidn');
+    }
+
+    /**
+     * Relasi dengan pembimbing akademik.
+     * Satu user bisa menjadi satu pembimbing akademik.
+     */
+    public function pembimbingAkademik()
+    {
+        return $this->hasOne(PembimbingAkademik::class, 'nidn_pembimbingakademik', 'nidn');
+    }
+
+    /**
+     * Relasi dengan bagian akademik.
+     * Satu user bisa menjadi satu bagian akademik.
+     */
+    public function bagianAkademik()
+    {
+        return $this->hasOne(BagianAkademik::class, 'nidn_bagianakademik', 'nidn');
+
+    }
+    public function dosenPengampu()
+    {
+        return $this->hasMany(DosenPengampu::class, 'nidn_dosenpengampu', 'nidn');
     }
 }

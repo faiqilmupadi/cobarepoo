@@ -8,10 +8,25 @@ use Illuminate\Http\Request;
 use App\Models\DosenPengampu;
 use App\Models\MataKuliah;
 use App\Models\JadwalKuliah;
+use App\Models\PengalokasianRuang;
+use App\Models\ProgramStudi;
+use Illuminate\Support\Facades\Log;
 
 
 class KetuaProgramStudiController extends Controller
 {
+    public function getRuangan($id_programstudi)
+    {
+        // Ambil ruangan berdasarkan pengalokasian program studi
+        $ruangPerkuliahan = PengalokasianRuang::where('id_programstudi', $id_programstudi)
+            ->with('ruangperkuliahan') // Relasi ke RuangPerkuliahan
+            ->get()
+            ->pluck('ruangperkuliahan'); // Ambil data ruangan dari relasi
+
+        // Kembalikan data sebagai JSON untuk AJAX
+        return response()->json($ruangPerkuliahan);
+    }
+
     public function indexjadwalKuliah()
     {
         $jadwal = JadwalKuliah::with('matakuliah.dosenPengampu')->get();;
@@ -39,7 +54,8 @@ class KetuaProgramStudiController extends Controller
         $matakuliah = MataKuliah::all();
         $ruangperkuliahan = RuangPerkuliahan::all();
         $kelas = Kelas::all();
-        return view('ketuaprogramstudi.jadwalkuliah', compact('matakuliah', 'ruangperkuliahan', 'kelas'));
+        $programstudi = ProgramStudi::all();
+        return view('ketuaprogramstudi.jadwalkuliah', compact('matakuliah', 'ruangperkuliahan', 'kelas', 'programstudi'));
     }
     /**
      * Store a newly created resource in storage.
@@ -75,72 +91,115 @@ class KetuaProgramStudiController extends Controller
         return redirect()->route('memilihmatakuliah.create')->with('success', 'Mata kuliah berhasil ditambahkan.');
     }
 
+    public function hitungJamSelesai(Request $request)
+    {
+        // Validasi input
+        try {
+            $request->validate([
+                'kode_mk' => 'required|exists:matakuliah,kode_mk',
+                'jam' => 'required|date_format:H:i',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation Error:', $e->errors());
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+
+        // Log data request
+        Log::info('Request Data:', $request->all());
+
+        // Dapatkan mata kuliah berdasarkan kode_mk
+        $mataKuliah = MataKuliah::where('kode_mk', $request->kode_mk)->first();
+
+        if (!$mataKuliah) {
+            Log::error('Mata Kuliah Tidak Ditemukan:', ['kode_mk' => $request->kode_mk]);
+            return response()->json(['message' => 'Mata kuliah tidak ditemukan.'], 404);
+        }
+
+        $sks = $mataKuliah->sks;
+
+        // Konversi jam mulai ke format DateTime
+        try {
+            $jamMulai = new \DateTime($request->input('jam'));
+        } catch (\Exception $e) {
+            Log::error('Error Mengonversi Jam:', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Format jam tidak valid.'], 400);
+        }
+
+        // 1 SKS = 50 menit
+        $durasi = $sks * 50;
+
+        // Hitung jam selesai
+        $jamSelesai = clone $jamMulai;
+        $jamSelesai->modify("+$durasi minutes");
+
+        // Format hasil ke string dan kirim sebagai response JSON
+        return response()->json([
+            'jam_selesai' => $jamSelesai->format('H:i')  // Pastikan ini sesuai dengan yang akan ditampilkan di view
+        ]);
+    }
+
+
     public function storeJadwalKuliah(Request $request)
     {
+        // dd($request->all());  // Untuk debugging input yang masuk
         // Validasi input
         $request->validate([
             'kode_mk' => 'required|exists:matakuliah,kode_mk',
             'kode_ruang' => 'required|exists:ruangperkuliahan,kode_ruang',
             'hari' => 'required|string|min:1|max:10',
-            'jam' => 'required|date_format:H:i',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'nama_kelas' => 'required|exists:kelas,nama_kelas',
         ]);
 
-        // Ambil data mata kuliah berdasarkan kode_mk
         $mataKuliah = MataKuliah::where('kode_mk', $request->kode_mk)->first();
 
-        // Cek apakah mata kuliah ditemukan
         if (!$mataKuliah) {
             return redirect()->back()->withErrors(['kode_mk' => 'Mata kuliah tidak ditemukan.']);
         }
 
-        // Ambil nidn_dosenpengampu dari data mata kuliah yang ditemukan
-        $nidn_dosenpengampu = $mataKuliah->nidn_dosenpengampu;
-
-        // Pastikan nidn_dosenpengampu tidak null
-        if (!$nidn_dosenpengampu) {
-            return redirect()->back()->withErrors(['nidn_dosenpengampu' => 'Dosen pengampu tidak ditemukan.']);
-        }
-
-        // Cek apakah sudah ada jadwal dengan hari dan jam yang sama, dengan status 'disetujui' atau 'menunggu konfirmasi'
-        $existingJadwal = JadwalKuliah::where('hari', $request->hari)
-            ->where('jam', $request->jam)
-            ->whereIn('status', ['disetujui', 'menunggu konfirmasi']) // Cek jadwal yang sudah disetujui atau menunggu konfirmasi
-            ->first();
-
-        // Cek apakah ada ruangan yang sudah digunakan pada hari dan jam yang sama, dengan status 'disetujui' atau 'menunggu konfirmasi'
-        $ruangTerpakai = JadwalKuliah::where('kode_ruang', $request->kode_ruang)
+        // Pengecekan bentrok ruangan dan jadwal
+        $overlapRuangan = JadwalKuliah::where('kode_ruang', $request->kode_ruang)
             ->where('hari', $request->hari)
-            ->where('jam', $request->jam)
-            ->whereIn('status', ['disetujui', 'menunggu konfirmasi']) // Cek ruangan yang terpakai
+            ->where(function ($query) use ($request) {
+                $query->where('jam_mulai', '<', $request->jam_selesai)
+                    ->where('jam_selesai', '>', $request->jam_mulai);
+            })
             ->first();
 
-        // Jika ada jadwal dengan status 'disetujui' atau 'menunggu konfirmasi' pada hari dan jam yang sama
-        if ($existingJadwal) {
-            return redirect()->back()->withErrors([
-                'jadwal_conflict' => 'Tidak bisa menambahkan jadwal pada hari dan jam yang sama, karena sudah ada jadwal dengan status ' . $existingJadwal->status . '.'
-            ]);
+        if ($overlapRuangan) {
+            return redirect()->back()->withErrors(['kode_ruang' => 'Ruangan telah digunakan pada hari dan jam yang dipilih.']);
         }
 
-        // Jika ruangan sudah terpakai pada hari dan jam yang sama dengan status 'disetujui' atau 'menunggu konfirmasi'
-        if ($ruangTerpakai) {
-            return redirect()->back()->withErrors([
-                'ruangan_conflict' => 'Ruangan sudah terpakai pada hari dan jam yang sama oleh mata kuliah ' . $ruangTerpakai->kode_mk . ' dengan status ' . $ruangTerpakai->status . '.'
-            ]);
+        // Pengecekan bentrok kelas
+        $overlapKelas = JadwalKuliah::where('nama_kelas', $request->nama_kelas)
+            ->where('hari', $request->hari)
+            ->where(function ($query) use ($request) {
+                $query->where('jam_mulai', '<', $request->jam_selesai)
+                    ->where('jam_selesai', '>', $request->jam_mulai);
+            })
+            ->first();
+
+        if ($overlapKelas) {
+            return redirect()->back()->withErrors(['nama_kelas' => 'Kelas sudah memiliki mata kuliah lain pada hari dan jam yang dipilih.']);
         }
 
-        // Simpan data jadwal kuliah
+        // Simpan jadwal kuliah
         JadwalKuliah::create([
             'kode_mk' => $request->kode_mk,
             'kode_ruang' => $request->kode_ruang,
             'hari' => $request->hari,
-            'jam' => $request->jam,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'nama_mk' =>  MataKuliah::where('kode_mk', $request->kode_mk)->first()->nama_mk,
+            'jenis' =>  MataKuliah::where('kode_mk', $request->kode_mk)->first()->jenis,
+            'semester' =>  MataKuliah::where('kode_mk', $request->kode_mk)->first()->semester,
+            'sks' => MataKuliah::where('kode_mk', $request->kode_mk)->first()->sks,
             'nama_kelas' => $request->nama_kelas,
-            'nidn_dosenpengampu' => $nidn_dosenpengampu, // Simpan dosen pengampu
+            'nidn_dosenpengampu' => MataKuliah::where('kode_mk', $request->kode_mk)->first()->nidn_dosenpengampu,
         ]);
 
-        // Redirect ke halaman daftar mata kuliah dengan pesan sukses
-        return redirect()->route('jadwalkuliah.create')->with('success', 'Jadwal kuliah berhasil ditambahkan.');
+        return redirect()->route('jadwalkuliah.create')->with('success', 'Jadwal kuliah berhasil disimpan.');
     }
 
 

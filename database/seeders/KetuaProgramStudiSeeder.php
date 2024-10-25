@@ -15,10 +15,10 @@ class KetuaProgramStudiSeeder extends Seeder
     {
         // Ketuaprogramstudi::factory()->count(2)->create();
         DB::table('ketuaprogramstudi')->insert([
-            'nidn_ketuaprogramstudi' => '198101020000000003', 
+            'nidn_ketuaprogramstudi' => '198101020000000800', 
             'nama_ketuaprogramstudi' => 'Dinar Mutiara K N, S.T., M.InfoTech.(Comp)., Ph.D.', 
             'id_programstudi' => 1, 
-            'email' => 'dinar.k@lecturer.undip.ac.id', 
+            'email' => 'aris.sugiharto@lecturer.undip.ac.id', 
             'id_fakultas' => 1, 
         ]);
     }

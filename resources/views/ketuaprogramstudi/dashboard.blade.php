@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+
     <title>Dashboard Ketua Program Studi</title>
 
     <style>
@@ -149,8 +150,8 @@
             <div class="status-details">
                 <h3> <strong>Status Jabatan</strong></h3>
                 <h4>Ketua Program Studi</h4>
-                <p><strong>Nama </strong> Sandy Kurniawan, S.Kom., M.Kom</p>
-                <p><strong>NIP: </strong> 199603032024061003</p>
+                <p><strong>Nama Pegawai: </strong>{{ $user->name ?? 'User tidak ditemukan' }}</p>
+                <p><strong>NIDN: </strong>{{ $nidn ?? 'NIDN tidak ditemukan' }}</p>
                 <p><strong>Masa Jabatan: </strong> 2020 - 2025</p>
                 <p><strong>Fakultas: </strong>Fakultas Sains dan Matematika</p>
                 <p><strong>Status Akademik </strong><button type="button" class="btn btn-info btn-sm">AKTIF</button>
@@ -171,9 +172,13 @@
     <div class="profile">
         <img src="profile.png" alt="Profile Image">
         <div class="profile-name">
-            <p>Sandy Kurniawan, S.Kom., M.Kom</p>
-            <p>199603032024061003</p>
+            <p>Nama: {{ $user->name ?? 'User tidak ditemukan' }}</p>
+            <p>NIDN: {{ $nidn ?? 'NIDN tidak ditemukan' }}</p>
             <p>Informatika</p>
+        </div>
+        <div class="btn-container">
+            <button type="button" class="btn btn-outline-secondary"
+                onclick="window.location.href='{{ route('logout') }}'">Logout</button>
         </div>
     </div>
 
