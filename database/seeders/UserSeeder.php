@@ -99,14 +99,31 @@ class UserSeeder extends Seeder
             ['24060122140162', 'ZAHRA NISAA FITRIA NUR AFIFAH'],
         ];
 
-        foreach ($mahasiswa as $mhs) {
+        foreach ($mahasiswa as $mhs) { 
             $namaParts = explode(' ', $mhs[1]); // Memecah nama menjadi bagian-bagian
-            $namaPendek = strtolower($namaParts[0] . '.' . $namaParts[1]); // Menggabungkan nama depan dan nama kedua
-            User::create([
-                'name' => $mhs[1],
-                'email' => $namaPendek . '@students.undip.ac.id', // Format email
-                'password' => bcrypt('root'), // Password yang di-hash
-            ]);
+        
+            // Memastikan ada setidaknya satu elemen
+            if (isset($namaParts[1])) {
+                $namaPendek = strtolower($namaParts[0] . '.' . $namaParts[1]); // Menggabungkan nama depan dan nama kedua
+            } else {
+                $namaPendek = strtolower($namaParts[0]); // Jika hanya ada satu nama, gunakan itu saja
+            }
+        
+            // Mencegah duplikasi email
+            $email = $namaPendek . '@students.undip.ac.id';
+        
+            // Periksa apakah email sudah ada di database
+            if (!User::where('email', $email)->exists()) {
+                User::create([
+                    'name' => $mhs[1],
+                    'email' => $email, // Format email
+                    'password' => bcrypt('root'), // Password yang di-hash
+                ]);
+            } else {
+                // Tindakan yang diambil jika email sudah ada, bisa dicetak log atau diabaikan
+                echo "Email sudah ada: $email\n";
+            }
         }
     }
 }
+

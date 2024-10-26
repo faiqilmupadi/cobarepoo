@@ -16,8 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_fakultas'); // Foreign key untuk id_fakultas
             $table->timestamps(); // Untuk mencatat waktu pembuatan dan update
 
-            $table->primary('nidn_pembimbingakademik');
-
             // Menambahkan foreign key constraints
             $table->foreign('nidn_pembimbingakademik')->references('nidn')->on('dosen')->onDelete('cascade'); // Merujuk ke nidn di tabel dosen
             $table->foreign('id_programstudi')->references('id_programstudi')->on('program_studi')->onDelete('cascade');
